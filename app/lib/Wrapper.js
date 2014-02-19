@@ -53,7 +53,7 @@ Wrapper.prototype.manageParticipantEvents = function (participant) {
     self.logQuittingAction(participant);
   });
   participant.on(EVENTS.PARTICIPANT.MESSAGE, function (type, data, callback) {
-    self.setRigTemperature(data.newTemperatureValue);
+    self.setRigTemperature(parseInt(data.newTemperatureValue, 10));
   });
 };
 
