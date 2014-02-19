@@ -10,28 +10,40 @@ function Rig() {
 Rig.prototype.init = function (callback) {
   var self = this;
 
-  function mapDevices(data) {
+  function mapFromDevices(data) {
     for (var deviceId in data.device) {
-      var unit = Thermostat.create();
-      unit.setId(deviceId);
-      unit.setTemperature(data.shared[deviceId].target_temperature);
-      unit.setScale(data.device[deviceId].temperature_scale);
-      self.units.push(unit);
+      if (data.track[deviceId].online) {
+        var unit = Thermostat.create();
+        unit.setId(deviceId);
+        unit.setTemperature(Math.floor(data.shared[deviceId].target_temperature));
+        unit.setScale(data.device[deviceId].temperature_scale);
+        self.units.push(unit);
+      }
     }
     return callback();
   }
 
+  self.connect(mapFromDevices);
+};
+
+Rig.prototype.connect = function (callback) {
   nest.login(config.nest.username, config.nest.password, function (err) {
     if (err) return callback(err);
-    nest.fetchStatus(mapDevices);
+    return nest.fetchStatus(callback);
   });
 };
 
 Rig.prototype.setTemperature = function (temperature) {
-  for (var i = 0, len = this.units.length; i < len; i++) {
-    this.units[i].setTemperature(temperature);
-    nest.setTemperature(this.units[i].getId(), temperature);
+  var self = this;
+
+  function mapToDevices() {
+    for (var i = 0, len = self.units.length; i < len; i++) {
+      self.units[i].setTemperature(temperature);
+      nest.setTemperature(self.units[i].getId(), temperature);
+    }
   }
+
+  self.connect(mapToDevices);
 };
 
 Rig.prototype.getTemperature = function () {

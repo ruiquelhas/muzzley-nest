@@ -29,7 +29,7 @@ Thermostat.prototype.setScale = function (scale) {
 };
 
 Thermostat.prototype.toString = function () {
-  return 'The Nest device #' + this.id + ' has a current temperature of ' + Math.floor(this.temperature) + ' ' + this.scale;
+  return 'The Nest device #' + this.id + ' has a current temperature of ' + this.temperature + ' ' + this.scale;
 };
 
 exports = module.exports = {};

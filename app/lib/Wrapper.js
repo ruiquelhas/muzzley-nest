@@ -28,6 +28,7 @@ Wrapper.prototype.manageActivity = function (activity) {
 
 Wrapper.prototype.showProperWidget = function (participant) {
   var self = this;
+  console.log('[INFO] participant #' + participant.id + ' joined via the Muzzley app.');
   participant.changeWidget(config.muzzley.widget.type, config.muzzley.widget.properties, function () {
     self.bootstrapParticipantWidget(participant);
     self.manageParticipantEvents(participant);
@@ -43,7 +44,7 @@ Wrapper.prototype.bootstrapParticipantWidget = function (participant) {
 };
 
 Wrapper.prototype.logQuittingAction = function (participant) {
-  console.log('[INFO] participant ' + participant + ' has quit the Muzzley app.');
+  console.log('[INFO] participant #' + participant.id + ' has quit via the Muzzley app.');
 };
 
 Wrapper.prototype.manageParticipantEvents = function (participant) {
